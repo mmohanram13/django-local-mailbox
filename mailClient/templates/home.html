@@ -1,0 +1,147 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="mailClient">
+  <meta name="author" content="Mohan Ram M">
+  <link rel="icon" href="{% static 'images/email.ico' %}"> 
+  <title>{% block title %}mailClient{% endblock %}</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <!-- Custom styles for this template -->
+  <link href="{% static 'css/home.css' %}" rel="stylesheet">
+
+</head>
+<body>
+  <main>
+    {% block content %}
+      {% if user.is_authenticated %}
+        <!--Hi {{ user.username }}!-->
+          <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+            <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">mailClient</a>
+            <ul class="navbar-nav px-3">
+              <li class="nav-item text-nowrap">
+                <a class="nav-link" href="{% url 'logout' %}">Hi {{ user.username }}! Log out</a>
+              </li>
+            </ul>
+          </nav>
+                  
+          <div class="container-fluid">
+            <div class="row">
+              <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                <div class="sidebar-sticky">
+                  <ul class="nav flex-column">
+                    <li class="nav-item">
+                      <a class="nav-link" href="#">
+                        <span data-feather="inbox"></span>
+                        Inbox
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="" data-toggle="modal" data-target="#composeModal">
+                        <span data-feather="edit"></span>
+                        Compose
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </nav>
+                  
+              <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3">
+                  <h1 class="h2">Inbox</h1>
+                </div>
+                <div class="table-responsive-md">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                          <tr>
+                            <th scope="col">From</th>
+                            <th scope="col">Subject</th>
+                            <th scope="col">Message</th>
+                            <th scope="col">Received</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for result in res %}
+                          <tr>
+                            <td scope="row">{{ result.user_email }}</td>
+                            <td>{{ result.subject }}</td>
+                            <td>{{ result.text }}</td>
+                            <td>{{ result.date }}</td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                </div>
+              </main>
+            </div>
+          </div>
+
+          <!-- The Modal -->
+          <div class="modal fade" id="composeModal">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+      
+              <!-- Modal Header -->
+              <div class="modal-header">
+                <h4 class="modal-title">Compose Email</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+        
+              <form method="POST" action="/sendmail/">
+                {% csrf_token %}
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="fromEmailId">From</label>
+                        <input type="text" class="form-control" id="fromEmailId" value="{{ user.username }}" readonly name="from">
+                      </div>
+                  
+                  <div class="form-group">
+                    <label for="toEmailId">Recipient</label>
+                    <input type="email" class="form-control" id="toEmailId" placeholder="For example: example@example.com" name="recipient">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" class="form-control" id="subject" placeholder="Type your subject here..." name="subject">
+                  </div>
+                      
+                  <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea class="form-control" id="message" rows="3" placeholder="Type your message here..." name="message"></textarea>
+                  </div>
+                </div>
+        
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Send</button>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+                  
+        <!-- Icons -->
+          <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+          <script>
+            feather.replace()
+          </script>
+          <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+          <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        {% else %}
+          <p>You are not logged in</p>
+          <a href="{% url 'login' %}">login</a>
+        {% endif %}
+      {% endblock %}
+    </main>
+</body>
+</html>
