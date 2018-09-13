@@ -23,7 +23,7 @@ Steps to run the code: (in Windows)
 		      password: 123456
 14. logout from admin site
 15. open 2 browser windows (one in normal and other in incognito)
-16. log on to http:127.0.0.1:8000/ 
+16. log on to http://127.0.0.1:8000/ 
 17. log in with 2 different accounts in 2 windows
 18. Compose an email in one and click send
 19. Refresh the other manually to see recieved messages.
