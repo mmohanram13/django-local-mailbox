@@ -15,7 +15,7 @@ Steps to run the code: (in Windows)
 10. python manage.py createsuperuser
 	--> user: admin
 	--> email: admin@example.com
-	--> pass: 123456
+	--> password: 123456
 11. python manage.py runserver
 12. go to http://127.0.0.1:8000/admin/
 13. create users there. (create atleast 2 users)
